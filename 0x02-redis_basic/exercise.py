@@ -29,7 +29,7 @@ class Cache:
         return data
 
     def get_str(self, key: str) -> str:
-        """Gets a string from the cache"""
+        """Converts redis data to string."""
         data = self._redis.get(key)
         return data.decode("utf-8")
 

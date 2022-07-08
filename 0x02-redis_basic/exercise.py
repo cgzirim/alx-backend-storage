@@ -12,11 +12,40 @@ def count_calls(method: Callable) -> Callable:
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        """Wrapper of decorator"""
+        """Wrapper of decorator."""
         self._redis.incr(key)
         return method(self, *args, **kwargs)
 
     return wrapper
+
+def call_history(method: Callable) -> Callable:
+    """Decorator to store the history of inputs and outputs for a method in
+    the Cache class.
+    """
+    input_key = method.__qualname__ + ":inputs"
+    output_key = method.__qualname__ + ":outputs"
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """Wrapper of decorator."""
+        self._redis.rpush(input_key, str(args))
+        self._redis.rpush(output_key, method(self, *args))
+        return method(self, *args, **kwargs)
+    return wrapper
+
+def replay(method: Callable) -> None:
+    """Displays the history of calls of a particular function."""
+    key = method.__qualname__
+    r_instance = method.__self__._redis
+    times_called = r_instance.get(key).decode('utf-8')
+    inputs = r_instance.lrange(key + ":inputs", 0, -1)
+    outputs = r_instance.lrange(key + ":outputs", 0, -1)
+
+    print(f"{method.__qualname__} was called {times_called} times")
+    for i in range(len(inputs)):
+        input = inputs[i].decode('utf-8')
+        output = outputs[i].decode('utf-8')
+        print(f"{method.__qualname__}(*{input}) -> {output}")
 
 
 class Cache:
@@ -28,6 +57,7 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Generates random key and store the arg data in it."""
         key = str(uuid.uuid4())

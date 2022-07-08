@@ -45,7 +45,7 @@ def replay(method: Callable) -> None:
     outputs = r_instance.lrange(key + ":outputs", 0, -1)
     zipped = zip(inputs, outputs)
 
-    print(f"{method.__qualname__} was called {times_called} times")
+    print(f"{method.__qualname__} was called {times_called} times:")
     for input, output in zipped:
         input = input.decode("utf-8")
         output = output.decode("utf-8")

@@ -1,5 +1,5 @@
 # Backend storage - MySQL, MongoDB & Redis
-This repository contains programs that were created specifically for ALX's back-end specialization track. In the course of these projects, I advanced my skill in MySQL, learned about NoSQL and practiced using MongoDB. Additionally, I gained an understanding of Redis and how to utilize it as a basic cache.
+This repository contains programs that were created specifically for ALX's back-end specialization track. In the course of the projects, I advanced my skill in MySQL, learned about NoSQL and practiced using MongoDB. Additionally, I gained an understanding of Redis and how to utilize it as a basic cache.
 
 ## Author :black_nib:
 - **Chigozirim Igweamaka** <[iChigozirim](https://github.com/iChigozirim)>
